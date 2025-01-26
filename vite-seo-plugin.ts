@@ -402,7 +402,6 @@ export function seoPlugin(): Plugin {
               'koszt-wdrozenia-erp/index.html': 'koszt-wdrozenia-erp',
               'koszt-wdrozenia-erp.html': 'koszt-wdrozenia-erp',
               'firmy-it/index.html': 'firmy-it',
-              'firmy-it.html': 'firmy-it',
               'index.html': ''
             };
             
@@ -431,101 +430,14 @@ export function seoPlugin(): Plugin {
           }
           
           // Extract metadata from SEO HTML
-          const metaTags: HtmlTagDescriptor[] = [];
-          const matches = seoHtml.match(/<meta[^>]+>/g) || [];
-          const titleMatch = seoHtml.match(/<title[^>]*>(.*?)<\/title>/);
-          const structuredDataMatch = seoHtml.match(/<script type="application\/ld\+json">\s*([\s\S]*?)\s*<\/script>/);
-          const canonicalMatch = seoHtml.match(/<link[^>]+rel="canonical"[^>]*>/);
+          const metaTags = extractMetaTags(seoHtml);
           
-          console.log('SEO Plugin: Found meta tags:', matches.length);
+          // Inject meta tags into HTML
+          html = injectMetaTags(html, metaTags);
           
-          // Remove existing SEO tags from HTML
-          html = html.replace(/<title>.*?<\/title>/, '');
-          html = html.replace(/<meta[^>]+name="[^"]*"[^>]*>/g, '');
-          html = html.replace(/<meta[^>]+property="[^"]*"[^>]*>/g, '');
-          html = html.replace(/<link[^>]+rel="canonical"[^>]*>/g, '');
-          html = html.replace(/<script[^>]+type="application\/ld\+json"[^>]*>[\s\S]*?<\/script>/g, '');
-          
-          // Add only SEO-specific meta tags (skip viewport and charset)
-          matches.forEach(tag => {
-            if (!tag.includes('viewport') && !tag.includes('charset')) {
-              // Parse meta tag attributes
-              const nameMatch = tag.match(/name="([^"]+)"/);
-              const contentMatch = tag.match(/content="([^"]+)"/);
-              const propertyMatch = tag.match(/property="([^"]+)"/);
-              
-              if ((nameMatch || propertyMatch) && contentMatch) {
-                metaTags.push({
-                  tag: 'meta',
-                  attrs: {
-                    ...(nameMatch ? { name: nameMatch[1] } : {}),
-                    ...(propertyMatch ? { property: propertyMatch[1] } : {}),
-                    content: contentMatch[1]
-                  },
-                  injectTo: 'head' as const
-                });
-              }
-            }
-          });
-
-          const tags: HtmlTagDescriptor[] = [];
-
-          // Add title if found
-          if (titleMatch) {
-            console.log('SEO Plugin: Adding title:', titleMatch[1]);
-            tags.push({
-              tag: 'title',
-              children: titleMatch[1],
-              injectTo: 'head' as const
-            });
-          }
-
-          // Add meta tags
-          tags.push(...metaTags);
-          console.log('SEO Plugin: Added', metaTags.length, 'meta tags');
-
-          // Add canonical link if found
-          if (canonicalMatch) {
-            const href = canonicalMatch[0].match(/href="([^"]+)"/)
-            if (href && href[1]) {
-              console.log('SEO Plugin: Adding canonical link');
-              tags.push({
-                tag: 'link',
-                attrs: {
-                  rel: 'canonical',
-                  href: href[1]
-                },
-                injectTo: 'head' as const
-              });
-            }
-          }
-
-          // Add structured data if found
-          if (structuredDataMatch) {
-            console.log('SEO Plugin: Adding structured data');
-            const structuredData = structuredDataMatch[1].trim();
-            try {
-              // Validate JSON and format it
-              const jsonData = JSON.parse(structuredData);
-              tags.push({
-                tag: 'script',
-                attrs: { type: 'application/ld+json' },
-                children: JSON.stringify(jsonData, null, 2),
-                injectTo: 'head' as const
-              });
-              console.log('SEO Plugin: Successfully added structured data');
-            } catch (err) {
-              console.error('SEO Plugin: Error parsing structured data JSON:', err);
-            }
-          }
-
-          console.log('SEO Plugin: Successfully generated', tags.length, 'tags');
-          return {
-            html,
-            tags
-          };
-        } catch (error) {
-          console.error('SEO Plugin Error:', error);
+          return html;
+        } catch (err) {
+          console.error('SEO Plugin: Error transforming HTML:', err);
           return html;
         }
       }
