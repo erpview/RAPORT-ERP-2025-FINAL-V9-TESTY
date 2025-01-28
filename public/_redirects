@@ -23,6 +23,9 @@
 /                /seo/index.html                 200!     User-Agent=*googlebot/2.1*
 /                /seo/index.html                 200!     User-Agent=*Bingbot/2.0*
 
+# 301 Redirects - add your redirects here
+/slownik-erp/311-rozliczanie-koszt%C3%B3w-koprodukt%C3%B3w-i-produkt%C3%B3w-ubocznych.html         /slownik-erp/rozliczanie-kosztow-koproduktow-i-produktow-ubocznych             301!    # Force redirect even if destination exists
+
 # Regular routes - these must come before the SPA fallback
 /slownik-erp/*          /index.html     200
 /slownik-erp            /index.html     200
