@@ -20,18 +20,26 @@ const MULTISELECT_FIELD_KEYS = [
 /**
  * Normalize a multiselect value into an array of strings
  */
-export const normalizeMultiselectValue = (value: string | string[]): string[] => {
+export const normalizeMultiselectValue = (value: unknown): string[] => {
   if (!value) return [];
   if (Array.isArray(value)) {
-    return value.flatMap(v => v.split(',').map(s => s.trim())).filter(Boolean);
+    return value
+      .filter((v): v is string => typeof v === 'string')
+      .flatMap(v => v.split(',').map(s => s.trim()))
+      .filter(Boolean);
   }
-  return value.split(',').map(v => v.trim()).filter(Boolean);
+  if (typeof value === 'string') {
+    return value.split(',').map(v => v.trim()).filter(Boolean);
+  }
+  return [];
 };
 
 /**
  * Check if a field should be treated as a multiselect field
  */
 export const isMultiselectField = (field: SystemField | { field_type?: string, field_key?: string }): boolean => {
-  return field.field_type === 'multiselect' || 
-         (field.field_key && MULTISELECT_FIELD_KEYS.includes(field.field_key));
+  return Boolean(
+    field.field_type === 'multiselect' || 
+    (field.field_key && MULTISELECT_FIELD_KEYS.includes(field.field_key))
+  );
 };

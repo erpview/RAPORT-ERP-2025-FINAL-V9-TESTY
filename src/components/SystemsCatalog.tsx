@@ -15,12 +15,19 @@ const SystemsCatalog: React.FC = () => {
   const { user, isAdmin, isEditor } = useAuth();
 
   // Normalize size array
-  const normalizeSize = (size: string | string[]): string[] => {
-    if (Array.isArray(size)) {
-      return size.flatMap(s => s.split(',').map(v => v.trim())).filter(Boolean);
-    }
-    return size ? size.split(',').map(v => v.trim()).filter(Boolean) : [];
-  };
+  const normalizeSize = (size: unknown): string[] => {
+  if (!size) return [];
+  if (Array.isArray(size)) {
+    return size
+      .filter((s): s is string => typeof s === 'string')
+      .flatMap(s => s.split(',').map(v => v.trim()))
+      .filter(Boolean);
+  }
+  if (typeof size === 'string') {
+    return size.split(',').map(v => v.trim()).filter(Boolean);
+  }
+  return [];
+};
 
   // Sort vendors alphabetically
   const vendors = Array.from(new Set(systems.map(system => system.vendor))).sort();
