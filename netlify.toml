@@ -14,67 +14,49 @@
   path = "/*"
   function = "bot-detection"
 
-# Dictionary pages redirect for SEO
 [[redirects]]
   from = "/slownik-erp"
   to = "/seo/slownik-erp/index.html"
   status = 200
-  force = true
   conditions = {Cookie = ["__prerender_bypass"]}
 
 [[redirects]]
   from = "/slownik-erp/*"
   to = "/seo/slownik-erp/:splat/index.html"
   status = 200
-  force = true
   conditions = {Cookie = ["__prerender_bypass"]}
 
-[[redirects]]
-  from = "/slownik-erp"
-  to = "/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/slownik-erp/*"
-  to = "/index.html"
-  status = 200
-
-# Companies index page redirect for SEO
 [[redirects]]
   from = "/firmy-it"
   to = "/seo/firmy-it/index.html"
   status = 200
-  force = true
+  conditions = {Cookie = ["__prerender_bypass"]}
 
-# Partners page redirect for SEO
 [[redirects]]
   from = "/partnerzy"
   to = "/seo/partnerzy/index.html"
   status = 200
-  force = true
+  conditions = {Cookie = ["__prerender_bypass"]}
 
-# Systems page redirect for SEO
 [[redirects]]
   from = "/systemy-erp"
   to = "/seo/systemy-erp/index.html"
   status = 200
   conditions = {Cookie = ["__prerender_bypass"]}
 
-# Calculator page redirect for SEO
 [[redirects]]
   from = "/kalkulator"
   to = "/seo/kalkulator/index.html"
   status = 200
   conditions = {Cookie = ["__prerender_bypass"]}
 
-# Compare page redirect for SEO
 [[redirects]]
   from = "/porownaj-systemy-erp"
   to = "/seo/porownaj-systemy-erp/index.html"
   status = 200
   conditions = {Cookie = ["__prerender_bypass"]}
 
-# Fallback redirect
+# This must be the last redirect rule
 [[redirects]]
   from = "/*"
   to = "/index.html"
