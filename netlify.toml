@@ -14,61 +14,13 @@
   path = "/*"
   function = "bot-detection"
 
-# Static file serving - try this first
-[[redirects]]
-  from = "/assets/*"
-  to = "/assets/:splat"
-  status = 200
-
-# SEO routes
-[[redirects]]
-  from = "/slownik-erp/*"
-  to = "/seo/slownik-erp/:splat/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/firmy-it"
-  to = "/seo/firmy-it/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/partnerzy"
-  to = "/seo/partnerzy/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/systemy-erp"
-  to = "/seo/systemy-erp/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/kalkulator"
-  to = "/seo/kalkulator/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/porownaj-systemy-erp"
-  to = "/seo/porownaj-systemy-erp/index.html"
-  status = 200
-  force = true
-
-# SPA routes - try these second
-[[redirects]]
-  from = "/slownik-erp"
-  to = "/index.html"
-  status = 200
-
+# Dictionary routes - serve index.html
 [[redirects]]
   from = "/slownik-erp/*"
   to = "/index.html"
   status = 200
 
-# Final fallback - try this last
+# Final fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"
