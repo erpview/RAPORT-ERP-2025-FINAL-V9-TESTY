@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build && cp -r public/seo dist/"
+  command = "npm run build"
   publish = "dist"
 
 [build.environment]
@@ -14,12 +14,7 @@
   path = "/*"
   function = "bot-detection"
 
-[[redirects]]
-  from = "/slownik-erp"
-  to = "/seo/slownik-erp/index.html"
-  status = 200
-  conditions = {Cookie = ["__prerender_bypass"]}
-
+# SEO routes with prerender bypass
 [[redirects]]
   from = "/slownik-erp/*"
   to = "/seo/slownik-erp/:splat/index.html"
@@ -56,7 +51,7 @@
   status = 200
   conditions = {Cookie = ["__prerender_bypass"]}
 
-# This must be the last redirect rule
+# SPA fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"
