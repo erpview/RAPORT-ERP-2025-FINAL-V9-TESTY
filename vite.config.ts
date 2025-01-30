@@ -96,14 +96,15 @@ export default defineConfig(async (): Promise<UserConfig> => {
           chunkFileNames: 'assets/js/[name]-[hash].js',
           entryFileNames: 'assets/js/[name]-[hash].js',
           manualChunks: {
-            vendor: ['react', 'react-dom'],
-            main: ['/src/main.tsx']
+            vendor: ['react', 'react-dom', 'react-router-dom'],
+            ui: ['@headlessui/react', '@heroicons/react', 'react-hot-toast'],
+            forms: ['@tinymce/tinymce-react', '@supabase/auth-ui-react'],
+            utils: ['date-fns', 'dompurify', 'html-react-parser'],
+            pdf: ['@react-pdf/renderer', 'react-pdf', 'pdfjs-dist']
           }
         }
       },
-      modulePreload: {
-        polyfill: false
-      }
+      chunkSizeWarningLimit: 1000
     },
     optimizeDeps: {
       include: ['react', 'react-dom']
