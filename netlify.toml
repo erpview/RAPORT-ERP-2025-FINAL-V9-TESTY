@@ -13,15 +13,6 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
-# Handle dictionary routes for users first
-[[redirects]]
-  from = "/slownik-erp/*"
-  to = "/index.html"
-  status = 200
-  force = true
-  conditions = {User-Agent = ["!*bot*", "!*crawler*", "!*spider*", "!*preview*", "!*Chrome-Lighthouse*", "!*DareBoost*", "!*Google-PageSpeed*"]}
-
-# Then handle SEO pages for bots
 [[redirects]]
   from = "/slownik-erp/*"
   to = "/seo/slownik-erp/:splat/index.html"
@@ -29,7 +20,6 @@
   force = true
   conditions = {User-Agent = ["*bot*", "*crawler*", "*spider*", "*preview*", "*Chrome-Lighthouse*", "*DareBoost*", "*Google-PageSpeed*"]}
 
-# Handle all other routes with SPA
 [[redirects]]
   from = "/*"
   to = "/index.html"

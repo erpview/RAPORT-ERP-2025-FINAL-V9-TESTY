@@ -38,13 +38,25 @@ export default defineConfig(async (): Promise<UserConfig> => {
         strict: true,
         allow: ['..']
       },
-      historyApiFallback: true,
+      historyApiFallback: {
+        disableDotRule: true,
+        rewrites: [
+          { from: /^\/slownik-erp\/.*$/, to: '/index.html' },
+          { from: /.*/, to: '/index.html' }
+        ]
+      }
     },
     preview: {
       port: 4173,
       host: true,
       strictPort: true,
-      historyApiFallback: true,
+      historyApiFallback: {
+        disableDotRule: true,
+        rewrites: [
+          { from: /^\/slownik-erp\/.*$/, to: '/index.html' },
+          { from: /.*/, to: '/index.html' }
+        ]
+      }
     },
     appType: 'spa',
     build: {
