@@ -13,31 +13,21 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
-# Handle SEO pages for bots
+# Handle dictionary routes for users first
 [[redirects]]
-  from = "/slownik-erp/:term"
-  to = "/seo/slownik-erp/:term/index.html"
+  from = "/slownik-erp/*"
+  to = "/index.html"
+  status = 200
+  force = true
+  conditions = {User-Agent = ["!*bot*", "!*crawler*", "!*spider*", "!*preview*", "!*Chrome-Lighthouse*", "!*DareBoost*", "!*Google-PageSpeed*"]}
+
+# Then handle SEO pages for bots
+[[redirects]]
+  from = "/slownik-erp/*"
+  to = "/seo/slownik-erp/:splat/index.html"
   status = 200
   force = true
   conditions = {User-Agent = ["*bot*", "*crawler*", "*spider*", "*preview*", "*Chrome-Lighthouse*", "*DareBoost*", "*Google-PageSpeed*"]}
-
-[[redirects]]
-  from = "/slownik-erp"
-  to = "/seo/slownik-erp/index.html"
-  status = 200
-  force = true
-  conditions = {User-Agent = ["*bot*", "*crawler*", "*spider*", "*preview*", "*Chrome-Lighthouse*", "*DareBoost*", "*Google-PageSpeed*"]}
-
-# Handle dictionary routes for users
-[[redirects]]
-  from = "/slownik-erp/:term"
-  to = "/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/slownik-erp"
-  to = "/index.html"
-  status = 200
 
 # Handle all other routes with SPA
 [[redirects]]
