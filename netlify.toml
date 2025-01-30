@@ -20,14 +20,14 @@
   to = "/seo/slownik-erp/:splat/index.html"
   status = 200
   force = true
-  conditions = {Bot = true}
+  conditions = {User-Agent = ["*bot*", "*crawler*", "*spider*", "*preview*"]}
 
 [[redirects]]
   from = "/slownik-erp"
   to = "/seo/slownik-erp/index.html"
   status = 200
   force = true
-  conditions = {Bot = true}
+  conditions = {User-Agent = ["*bot*", "*crawler*", "*spider*", "*preview*"]}
 
 # SPA fallback for dictionary pages
 [[redirects]]
