@@ -13,15 +13,3 @@
 [[edge_functions]]
   path = "/*"
   function = "bot-detection"
-
-# Dictionary routes - serve index.html
-[[redirects]]
-  from = "/slownik-erp/*"
-  to = "/index.html"
-  status = 200
-
-# Final fallback
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
