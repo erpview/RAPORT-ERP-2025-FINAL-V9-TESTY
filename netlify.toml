@@ -1,5 +1,5 @@
 [build]
-  command = "tsc && vite build"
+  command = "npm run build"
   publish = "dist"
 
 [build.environment]
@@ -20,7 +20,38 @@
   to = "/assets/:splat"
   status = 200
 
-# Then, handle all SPA routes explicitly
+# SEO routes for search engines
+[[redirects]]
+  from = "/slownik-erp/*"
+  to = "/seo/slownik-erp/:splat/index.html"
+  status = 200
+  conditions = {User-Agent = ["*Googlebot*", "*googlebot*", "*Bingbot*"]}
+
+[[redirects]]
+  from = "/slownik-erp"
+  to = "/seo/slownik-erp/index.html"
+  status = 200
+  conditions = {User-Agent = ["*Googlebot*", "*googlebot*", "*Bingbot*"]}
+
+[[redirects]]
+  from = "/systemy-erp"
+  to = "/seo/systemy-erp/index.html"
+  status = 200
+  conditions = {User-Agent = ["*Googlebot*", "*googlebot*", "*Bingbot*"]}
+
+[[redirects]]
+  from = "/partnerzy"
+  to = "/seo/partnerzy/index.html"
+  status = 200
+  conditions = {User-Agent = ["*Googlebot*", "*googlebot*", "*Bingbot*"]}
+
+[[redirects]]
+  from = "/koszt-wdrozenia-erp"
+  to = "/seo/koszt-wdrozenia-erp/index.html"
+  status = 200
+  conditions = {User-Agent = ["*Googlebot*", "*googlebot*", "*Bingbot*"]}
+
+# Then, handle all SPA routes for regular users
 [[redirects]]
   from = "/slownik-erp/*"
   to = "/index.html"
