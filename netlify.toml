@@ -14,93 +14,39 @@
   path = "/*"
   function = "bot-detection"
 
-# First, handle static assets
+# First, handle SEO pages
+[[redirects]]
+  from = "/slownik-erp/*/index.html"
+  to = "/seo/slownik-erp/:splat/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/slownik-erp/index.html"
+  to = "/seo/slownik-erp/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/systemy-erp/index.html"
+  to = "/seo/systemy-erp/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/partnerzy/index.html"
+  to = "/seo/partnerzy/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/koszt-wdrozenia-erp/index.html"
+  to = "/seo/koszt-wdrozenia-erp/index.html"
+  status = 200
+
+# Then, handle static assets
 [[redirects]]
   from = "/assets/*"
   to = "/assets/:splat"
   status = 200
 
-# SEO routes for search engines
-[[redirects]]
-  from = "/slownik-erp/*"
-  to = "/seo/slownik-erp/:splat/index.html"
-  status = 200
-  conditions = {User-Agent = ["*Googlebot*", "*googlebot*", "*Bingbot*"]}
-
-[[redirects]]
-  from = "/slownik-erp"
-  to = "/seo/slownik-erp/index.html"
-  status = 200
-  conditions = {User-Agent = ["*Googlebot*", "*googlebot*", "*Bingbot*"]}
-
-[[redirects]]
-  from = "/systemy-erp"
-  to = "/seo/systemy-erp/index.html"
-  status = 200
-  conditions = {User-Agent = ["*Googlebot*", "*googlebot*", "*Bingbot*"]}
-
-[[redirects]]
-  from = "/partnerzy"
-  to = "/seo/partnerzy/index.html"
-  status = 200
-  conditions = {User-Agent = ["*Googlebot*", "*googlebot*", "*Bingbot*"]}
-
-[[redirects]]
-  from = "/koszt-wdrozenia-erp"
-  to = "/seo/koszt-wdrozenia-erp/index.html"
-  status = 200
-  conditions = {User-Agent = ["*Googlebot*", "*googlebot*", "*Bingbot*"]}
-
-# Then, handle all SPA routes for regular users
-[[redirects]]
-  from = "/slownik-erp/*"
-  to = "/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/slownik-erp"
-  to = "/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/wdrozenie-erp"
-  to = "/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/koszt-wdrozenia-erp"
-  to = "/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/systemy-erp"
-  to = "/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/porownaj-systemy-erp"
-  to = "/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/admin/*"
-  to = "/index.html"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/editor/*"
-  to = "/index.html"
-  status = 200
-  force = true
-
-# Finally, catch all other routes
+# Finally, handle all other routes with SPA
 [[redirects]]
   from = "/*"
   to = "/index.html"
