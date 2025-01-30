@@ -37,6 +37,7 @@ export default function ComparisonModal({ systems, isOpen, onClose }: Comparison
   const [loading, setLoading] = useState(true);
   const [moduleFields, setModuleFields] = useState<ReturnType<typeof getModuleFields>>([]);
   const [systemDetails, setSystemDetails] = useState<SystemDetails[]>([]);
+  const [highlightDifferences, setHighlightDifferences] = useState(false);
 
   // Check if user has full access to comparison
   const hasFullAccess = isAdmin || 
@@ -170,6 +171,43 @@ export default function ComparisonModal({ systems, isOpen, onClose }: Comparison
     return fieldValue.value;
   };
 
+  const hasDifferentValues = (values: (SystemFieldValue | null)[]) => {
+    if (values.length < 2) return false;
+    
+    // Get the first non-null value to compare against
+    const firstValue = values[0]?.value || null;
+    
+    // Compare all values against the first one, treating null as a difference
+    return values.some(v => {
+      const currentValue = v?.value || null;
+      return currentValue !== firstValue;
+    });
+  };
+
+  const getRowClassName = (values: (SystemFieldValue | null)[] | string[] | string[][]) => {
+    // Only show highlighting if user is logged in and has full access
+    if (!highlightDifferences || !hasFullAccess || !user) return '';
+    
+    // For basic info (strings)
+    if (typeof values[0] === 'string') {
+      if (values.length < 2) return '';
+      const firstValue = values[0] || '-';
+      const hasDiff = values.some(v => (v || '-') !== firstValue);
+      return hasDiff ? 'bg-yellow-50' : '';
+    }
+
+    // For arrays of strings (like size)
+    if (Array.isArray(values[0])) {
+      if (values.length < 2) return '';
+      const firstValue = (values[0] as string[]).join(',');
+      const hasDiff = values.some(v => (v as string[]).join(',') !== firstValue);
+      return hasDiff ? 'bg-yellow-50' : '';
+    }
+    
+    // For field values
+    return hasDifferentValues(values as SystemFieldValue[]) ? 'bg-yellow-50' : '';
+  };
+
   // Check if we have custom fields available
   const hasCustomFields = moduleFields && moduleFields.length > 0;
 
@@ -197,7 +235,20 @@ export default function ComparisonModal({ systems, isOpen, onClose }: Comparison
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
         
         <Dialog.Panel className="relative w-full max-w-7xl mx-4 rounded-lg bg-white p-6 shadow-xl">
-          <div className="absolute right-4 top-4">
+          <div className="flex justify-between items-start mb-6">
+            <div className="flex items-center gap-4">
+              <Dialog.Title className="text-2xl font-bold">
+                Raport ERP: Porównanie
+              </Dialog.Title>
+              {hasFullAccess && user && (
+                <button
+                  onClick={() => setHighlightDifferences(!highlightDifferences)}
+                  className={`sf-button-secondary text-sm px-3 py-1.5 ${highlightDifferences ? 'border-[#2c3b67] text-[#2c3b67]' : ''}`}
+                >
+                  Podświetl różnice
+                </button>
+              )}
+            </div>
             <button
               type="button"
               onClick={handleClose}
@@ -206,10 +257,6 @@ export default function ComparisonModal({ systems, isOpen, onClose }: Comparison
               <XMarkIcon className="h-6 w-6" />
             </button>
           </div>
-
-          <Dialog.Title className="text-2xl font-bold mb-6">
-            Raport ERP: Porównanie
-          </Dialog.Title>
 
           {(loading || fieldsLoading) ? (
             <div className="flex flex-col items-center justify-center py-12">
@@ -244,7 +291,7 @@ export default function ComparisonModal({ systems, isOpen, onClose }: Comparison
                     <tr>
                       <td className="py-2 px-4 border-b">Dostawca</td>
                       {systemDetails.map(system => (
-                        <td key={system.id} className="py-2 px-4 border-b">
+                        <td key={system.id} className={`py-2 px-4 border-b ${getRowClassName(systemDetails.map(s => s.vendor))}`}>
                           {system.vendor}
                         </td>
                       ))}
@@ -252,7 +299,7 @@ export default function ComparisonModal({ systems, isOpen, onClose }: Comparison
                     <tr>
                       <td className="py-2 px-4 border-b">Wielkość firmy</td>
                       {systemDetails.map(system => (
-                        <td key={system.id} className="py-2 px-4 border-b">
+                        <td key={system.id} className={`py-2 px-4 border-b ${getRowClassName(systemDetails.map(s => s.size))}`}>
                           <MultiSelectDisplay value={system.size} />
                         </td>
                       ))}
@@ -261,7 +308,7 @@ export default function ComparisonModal({ systems, isOpen, onClose }: Comparison
                       <tr>
                         <td className="py-2 px-4 border-b">Strona internetowa</td>
                         {systemDetails.map(system => (
-                          <td key={system.id} className="py-2 px-4 border-b">
+                          <td key={system.id} className={`py-2 px-4 border-b ${getRowClassName(systemDetails.map(s => s.website))}`}>
                             <a 
                               href={system.website}
                               target="_blank"
@@ -277,7 +324,7 @@ export default function ComparisonModal({ systems, isOpen, onClose }: Comparison
                     <tr>
                       <td className="py-2 px-4 border-b">Opis</td>
                       {systemDetails.map(system => (
-                        <td key={system.id} className="py-2 px-4 border-b">
+                        <td key={system.id} className={`py-2 px-4 border-b ${getRowClassName(systemDetails.map(s => s.description))}`}>
                           {system.description}
                         </td>
                       ))}
@@ -298,29 +345,19 @@ export default function ComparisonModal({ systems, isOpen, onClose }: Comparison
                         </tr>
                         {fields
                           .filter(field => !basicFieldKeys.includes(field.field_key))
-                          .map(field => (
-                            <tr key={field.id}>
-                              <td className="py-2 px-4 border-b">
-                                {field.name}
-                                {field.description && (
-                                  <p className="text-sm text-gray-500">
-                                    {field.description}
-                                  </p>
-                                )}
-                              </td>
-                              {systems.map((system, index) => {
-                                const value = fieldValues[field.id]?.[index];
-                                return (
-                                  <td
-                                    key={system.id}
-                                    className="py-2 px-4 border-b"
-                                  >
+                          .map(field => {
+                            const values = fieldValues[field.id] || [];
+                            return (
+                              <tr key={field.id}>
+                                <td className="py-2 px-4 border-b">{field.name}</td>
+                                {values.map((value, index) => (
+                                  <td key={`${field.id}-${index}`} className={`py-2 px-4 border-b ${getRowClassName(values)}`}>
                                     {formatFieldValue(value, field)}
                                   </td>
-                                );
-                              })}
-                            </tr>
-                          ))}
+                                ))}
+                              </tr>
+                            );
+                          })}
                       </React.Fragment>
                     ))}
                   </tbody>
