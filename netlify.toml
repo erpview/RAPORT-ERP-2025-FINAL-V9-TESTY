@@ -20,6 +20,7 @@
   to = "/seo/slownik-erp/index.html"
   status = 200
   force = true
+  conditions = {Cookie = ["__prerender_bypass"]}
 
 [[redirects]]
   from = "/slownik-erp/*"
@@ -27,6 +28,11 @@
   status = 200
   force = true
   conditions = {Cookie = ["__prerender_bypass"]}
+
+[[redirects]]
+  from = "/slownik-erp"
+  to = "/index.html"
+  status = 200
 
 [[redirects]]
   from = "/slownik-erp/*"
