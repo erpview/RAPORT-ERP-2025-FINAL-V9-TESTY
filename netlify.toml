@@ -9,12 +9,31 @@
   for = "/*"
   [headers.values]
     X-Robots-Tag = "all"
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
 
 [[edge_functions]]
   path = "/*"
   function = "bot-detection"
 
+# Handle client-side routing
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
+# Handle SEO pages for bots
+[[redirects]]
+  from = "/slownik-erp/*"
+  to = "/seo/slownik-erp/:splat/index.html"
+  status = 200
+  force = true
+  conditions = {User-Agent = ["*bot*", "*crawler*", "*spider*", "*preview*", "*Chrome-Lighthouse*", "*DareBoost*", "*Google-PageSpeed*"]}
+
+[[redirects]]
+  from = "/slownik-erp"
+  to = "/seo/slownik-erp/index.html"
+  status = 200
+  force = true
+  conditions = {User-Agent = ["*bot*", "*crawler*", "*spider*", "*preview*", "*Chrome-Lighthouse*", "*DareBoost*", "*Google-PageSpeed*"]}

@@ -37,12 +37,14 @@ export default defineConfig(async (): Promise<UserConfig> => {
       fs: {
         strict: true,
         allow: ['..']
-      }
+      },
+      historyApiFallback: true,
     },
     preview: {
       port: 4173,
       host: true,
-      strictPort: true
+      strictPort: true,
+      historyApiFallback: true,
     },
     appType: 'spa',
     build: {
