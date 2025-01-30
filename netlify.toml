@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"
+  command = "npm run build && cp -r public/seo dist/"
   publish = "dist"
 
 [build.environment]
@@ -14,41 +14,56 @@
   path = "/*"
   function = "bot-detection"
 
-# First, handle SEO pages
+# Dictionary pages redirect for SEO
 [[redirects]]
-  from = "/slownik-erp/*/index.html"
-  to = "/seo/slownik-erp/:splat/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/slownik-erp/index.html"
+  from = "/slownik-erp"
   to = "/seo/slownik-erp/index.html"
   status = 200
+  force = true
 
 [[redirects]]
-  from = "/systemy-erp/index.html"
-  to = "/seo/systemy-erp/index.html"
+  from = "/slownik-erp/*"
+  to = "/seo/slownik-erp/:splat/index.html"
   status = 200
+  force = true
 
+# Companies index page redirect for SEO
 [[redirects]]
-  from = "/partnerzy/index.html"
+  from = "/firmy-it"
+  to = "/seo/firmy-it/index.html"
+  status = 200
+  force = true
+
+# Partners page redirect for SEO
+[[redirects]]
+  from = "/partnerzy"
   to = "/seo/partnerzy/index.html"
   status = 200
+  force = true
 
+# Systems page redirect for SEO
 [[redirects]]
-  from = "/koszt-wdrozenia-erp/index.html"
-  to = "/seo/koszt-wdrozenia-erp/index.html"
+  from = "/systemy-erp"
+  to = "/seo/systemy-erp/index.html"
   status = 200
+  conditions = {Cookie = ["__prerender_bypass"]}
 
-# Then, handle static assets
+# Calculator page redirect for SEO
 [[redirects]]
-  from = "/assets/*"
-  to = "/assets/:splat"
+  from = "/kalkulator"
+  to = "/seo/kalkulator/index.html"
   status = 200
+  conditions = {Cookie = ["__prerender_bypass"]}
 
-# Finally, handle all other routes with SPA
+# Compare page redirect for SEO
+[[redirects]]
+  from = "/porownaj-systemy-erp"
+  to = "/seo/porownaj-systemy-erp/index.html"
+  status = 200
+  conditions = {Cookie = ["__prerender_bypass"]}
+
+# Fallback redirect
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  force = true

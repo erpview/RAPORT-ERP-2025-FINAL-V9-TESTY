@@ -21,7 +21,6 @@ interface SEOData {
   ogDescription?: string;
   ogImage?: string;
   structuredData?: any;
-  content?: string;
 }
 
 async function generateHtmlFile(outputPath: string, seoData: SEOData) {
@@ -29,23 +28,7 @@ async function generateHtmlFile(outputPath: string, seoData: SEOData) {
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-touch-fullscreen" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="format-detection" content="telephone=no">
-  <meta name="HandheldFriendly" content="true">
-  <meta name="MobileOptimized" content="width">
-  
-  <!-- Icons -->
-  <link rel="icon" href="https://erp-view.pl/images/icony/favicon.png" />
-  <link rel="shortcut icon" href="https://erp-view.pl/images/icony/favicon.png" />
-  <link rel="apple-touch-icon" href="https://erp-view.pl/images/icony/icon-192.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="https://erp-view.pl/images/icony/icon-192.png" />
-  <link rel="icon" sizes="192x192" href="https://erp-view.pl/images/icony/icon-192.png" />
-  <link rel="icon" sizes="512x512" href="https://erp-view.pl/images/icony/icon-512.png" />
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${seoData.title}</title>
   <meta name="description" content="${seoData.description}">
   ${seoData.keywords ? `<meta name="keywords" content="${seoData.keywords}">` : ''}
@@ -56,36 +39,20 @@ async function generateHtmlFile(outputPath: string, seoData: SEOData) {
   <meta property="og:title" content="${seoData.ogTitle || seoData.title}">
   <meta property="og:description" content="${seoData.ogDescription || seoData.description}">
   ${seoData.ogImage ? `<meta property="og:image" content="${seoData.ogImage}">` : ''}
-  <meta property="og:type" content="article">
-  <meta property="og:locale" content="pl_PL">
-  <meta property="og:site_name" content="ERP-VIEW.PL">
-  ${seoData.canonicalUrl ? `<meta property="og:url" content="${seoData.canonicalUrl}">` : ''}
-  
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="${seoData.ogTitle || seoData.title}">
-  <meta name="twitter:description" content="${seoData.ogDescription || seoData.description}">
-  ${seoData.ogImage ? `<meta name="twitter:image" content="${seoData.ogImage}">` : ''}
   
   <!-- Structured Data -->
   ${seoData.structuredData ? `<script type="application/ld+json">
     ${JSON.stringify(seoData.structuredData, null, 2)}
   </script>` : ''}
-  
-  <link rel="stylesheet" crossorigin href="/assets/css/style-CBZhq_I6.css">
 </head>
 <body>
-  <div id="seo-content">
-    ${seoData.content || ''}
-  </div>
   <!-- This is a SEO-only page -->
 </body>
 </html>`;
 
-  const outputDir = path.dirname(outputPath);
-  await fs.mkdir(outputDir, { recursive: true });
-  await fs.writeFile(outputPath, html);
-  console.log(`Generated SEO page: ${outputPath}`);
+  await fs.mkdir(path.dirname(outputPath), { recursive: true });
+  await fs.writeFile(outputPath, html, 'utf-8');
+  console.log(`Generated SEO file: ${outputPath}`);
 }
 
 async function generateHomePage() {
@@ -117,15 +84,7 @@ async function generateHomePage() {
       "inLanguage": "pl-PL",
       "datePublished": "2024-01-01",
       "dateModified": new Date().toISOString().split('T')[0]
-    },
-    content: `
-      <article>
-        <h1>Raport ERP - Kompleksowy przewodnik po systemach ERP</h1>
-        <div class="home-content">
-          <p>Poznaj najnowszy raport o systemach ERP w Polsce. Sprawdź ranking, porównaj ceny i funkcjonalności wiodących systemów ERP.</p>
-        </div>
-      </article>
-    `
+    }
   };
 
   await generateHtmlFile(path.join(__dirname, '../public/seo/index.html'), seoData);
@@ -143,15 +102,7 @@ async function generateDictionaryPage() {
       "@type": "DefinedTermSet",
       "name": "Słownik ERP",
       "description": "Kompleksowy słownik terminów i pojęć związanych z systemami ERP"
-    },
-    content: `
-      <article>
-        <h1>Słownik ERP - Definicje i pojęcia systemów ERP</h1>
-        <div class="dictionary-content">
-          <p>Kompleksowy słownik terminów i pojęć związanych z systemami ERP. Poznaj znaczenie kluczowych terminów używanych w systemach zarządzania przedsiębiorstwem.</p>
-        </div>
-      </article>
-    `
+    }
   };
 
   await generateHtmlFile(path.join(__dirname, '../public/seo/slownik-erp/index.html'), seoData);
@@ -179,7 +130,7 @@ async function generateDictionaryTermPages() {
   for (const term of terms) {
     const seoData = {
       title: `${term.term} - Definicja w Słowniku ERP | ERP-VIEW.PL`,
-      description: term.explanation.replace(/<[^>]*>/g, '').substring(0, 155) + '...',
+      description: term.explanation,
       keywords: `${term.term}, definicja ${term.term}, ${term.term} erp, znaczenie ${term.term}, system erp ${term.term}`,
       robots: 'index, follow',
       canonicalUrl: `https://www.raport-erp.pl/slownik-erp/${term.slug}`,
@@ -194,18 +145,20 @@ async function generateDictionaryTermPages() {
           "url": "https://www.raport-erp.pl/slownik-erp"
         },
         "url": `https://www.raport-erp.pl/slownik-erp/${term.slug}`
-      },
-      content: `
-        <article>
-          <h1>${term.term}</h1>
-          <div class="term-content">
-            ${term.explanation}
-          </div>
-        </article>
-      `
+      }
     };
 
-    await generateHtmlFile(path.join(__dirname, `../public/seo/slownik-erp/${term.slug}/index.html`), seoData);
+    const outputDir = path.join(__dirname, `../public/seo/slownik-erp/${term.slug}`);
+    try {
+      await fs.mkdir(outputDir, { recursive: true });
+      await generateHtmlFile(
+        path.join(outputDir, 'index.html'),
+        seoData
+      );
+      console.log(`Generated SEO file for term: ${term.term} (${term.slug})`);
+    } catch (error) {
+      console.error(`Error generating SEO file for term ${term.term}:`, error);
+    }
   }
 }
 
@@ -238,15 +191,7 @@ async function generatePartnersPage() {
           }
         })) || []
       }
-    },
-    content: `
-      <article>
-        <h1>Partnerzy ERP - Zaufani dostawcy systemów ERP</h1>
-        <div class="partners-content">
-          <p>Poznaj naszych zaufanych partnerów dostarczających systemy ERP. Sprawdź oferty, referencje i doświadczenie wiodących firm wdrażających systemy ERP w Polsce.</p>
-        </div>
-      </article>
-    `
+    }
   };
 
   await generateHtmlFile(path.join(__dirname, '../public/seo/partnerzy/index.html'), seoData);
@@ -282,15 +227,7 @@ async function generatePartnerPages() {
           "name": "ERP-VIEW.PL",
           "url": "https://erp-view.pl"
         }
-      },
-      content: `
-        <article>
-          <h1>${partner.name}</h1>
-          <div class="partner-content">
-            <p>${partner.description}</p>
-          </div>
-        </article>
-      `
+      }
     };
 
     await generateHtmlFile(
@@ -327,15 +264,7 @@ async function generateSystemsPage() {
           "position": index + 1
         })) || []
       }
-    },
-    content: `
-      <article>
-        <h1>Systemy ERP w Polsce - Kompleksowy przegląd i porównanie</h1>
-        <div class="systems-content">
-          <p>Kompleksowy przegląd i porównanie systemów ERP dostępnych na polskim rynku. Poznaj wiodące rozwiązania, ich funkcjonalności i możliwości.</p>
-        </div>
-      </article>
-    `
+    }
   };
 
   await generateHtmlFile(path.join(__dirname, '../public/seo/systemy-erp/index.html'), seoData);
@@ -370,15 +299,7 @@ async function generateCostPage() {
         "@type": "WebPage",
         "@id": "https://www.raport-erp.pl/koszt-wdrozenia-erp"
       }
-    },
-    content: `
-      <article>
-        <h1>Ile kosztuje wdrożenie ERP? Kompleksowy przewodnik po kosztach wdrożenia ERP</h1>
-        <div class="cost-content">
-          <p>Sprawdź, ile kosztuje wdrożenie systemu ERP. Poznaj wszystkie składniki kosztów, porównaj modele wdrożenia i dowiedz się, jak zaplanować budżet na system ERP.</p>
-        </div>
-      </article>
-    `
+    }
   };
 
   await generateHtmlFile(path.join(__dirname, '../public/seo/koszt-wdrozenia-erp/index.html'), seoData);
