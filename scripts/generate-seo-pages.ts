@@ -28,7 +28,14 @@ async function generateHtmlFile(outputPath: string, seoData: SEOData) {
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="HandheldFriendly" content="true">
+  <meta name="MobileOptimized" content="width">
   <title>${seoData.title}</title>
   <meta name="description" content="${seoData.description}">
   ${seoData.keywords ? `<meta name="keywords" content="${seoData.keywords}">` : ''}
@@ -39,20 +46,33 @@ async function generateHtmlFile(outputPath: string, seoData: SEOData) {
   <meta property="og:title" content="${seoData.ogTitle || seoData.title}">
   <meta property="og:description" content="${seoData.ogDescription || seoData.description}">
   ${seoData.ogImage ? `<meta property="og:image" content="${seoData.ogImage}">` : ''}
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:site_name" content="ERP-VIEW.PL">
+  ${seoData.canonicalUrl ? `<meta property="og:url" content="${seoData.canonicalUrl}">` : ''}
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${seoData.ogTitle || seoData.title}">
+  <meta name="twitter:description" content="${seoData.ogDescription || seoData.description}">
+  ${seoData.ogImage ? `<meta name="twitter:image" content="${seoData.ogImage}">` : ''}
   
   <!-- Structured Data -->
   ${seoData.structuredData ? `<script type="application/ld+json">
     ${JSON.stringify(seoData.structuredData, null, 2)}
   </script>` : ''}
+  
+  <link rel="stylesheet" crossorigin href="/assets/css/style-CBZhq_I6.css">
 </head>
 <body>
   <!-- This is a SEO-only page -->
 </body>
 </html>`;
 
-  await fs.mkdir(path.dirname(outputPath), { recursive: true });
-  await fs.writeFile(outputPath, html, 'utf-8');
-  console.log(`Generated SEO file: ${outputPath}`);
+  const outputDir = path.dirname(outputPath);
+  await fs.mkdir(outputDir, { recursive: true });
+  await fs.writeFile(outputPath, html);
+  console.log(`Generated SEO page: ${outputPath}`);
 }
 
 async function generateHomePage() {
