@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"
+  command = "tsc && vite build"
   publish = "dist"
 
 [build.environment]
@@ -13,3 +13,65 @@
 [[edge_functions]]
   path = "/*"
   function = "bot-detection"
+
+# First, handle static assets
+[[redirects]]
+  from = "/assets/*"
+  to = "/assets/:splat"
+  status = 200
+
+# Then, handle all SPA routes explicitly
+[[redirects]]
+  from = "/slownik-erp/*"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/slownik-erp"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/wdrozenie-erp"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/koszt-wdrozenia-erp"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/systemy-erp"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/porownaj-systemy-erp"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/admin/*"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/editor/*"
+  to = "/index.html"
+  status = 200
+  force = true
+
+# Finally, catch all other routes
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = true
