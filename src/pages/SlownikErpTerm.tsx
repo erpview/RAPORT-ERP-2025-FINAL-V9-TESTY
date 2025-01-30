@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { dictionaryService } from '../services/dictionary';
 import { DictionaryTerm, DictionaryBanner } from '../types/dictionary';
 import { Button } from '../components/ui/Button';
@@ -23,12 +23,14 @@ const SlownikErpTerm: React.FC = () => {
   const [term, setTerm] = useState<DictionaryTerm | null>(null);
   const [banners, setBanners] = useState<DictionaryBanner[]>([]);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     const fetchTermData = async () => {
       if (!slug) return;
       
       try {
+        setLoading(true);
         const termData = await dictionaryService.getTermBySlug(slug);
         if (termData) {
           setTerm(termData);
@@ -42,8 +44,13 @@ const SlownikErpTerm: React.FC = () => {
       }
     };
 
+    // Force a refetch if we have the forceReload state
+    if (location.state?.forceReload) {
+      window.history.replaceState(null, '', location.pathname);
+    }
+    
     fetchTermData();
-  }, [slug]);
+  }, [slug, location.state?.forceReload]);
 
   if (loading) {
     return (
