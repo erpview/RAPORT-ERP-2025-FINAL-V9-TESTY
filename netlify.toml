@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build && cp -r public/seo dist/"
+  command = "npm run build"
   publish = "dist"
 
 [build.environment]
@@ -12,16 +12,6 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-
-[[edge_functions]]
-  path = "/*"
-  function = "bot-detection"
-
-# Handle client-side routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
 
 # Handle SEO pages for bots
 [[redirects]]
@@ -37,3 +27,9 @@
   status = 200
   force = true
   conditions = {User-Agent = ["*bot*", "*crawler*", "*spider*", "*preview*", "*Chrome-Lighthouse*", "*DareBoost*", "*Google-PageSpeed*"]}
+
+# Handle all other routes with SPA
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
