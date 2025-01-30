@@ -15,8 +15,8 @@
 
 # Handle SEO pages for bots
 [[redirects]]
-  from = "/slownik-erp/*"
-  to = "/seo/slownik-erp/:splat/index.html"
+  from = "/slownik-erp/:term"
+  to = "/seo/slownik-erp/:term/index.html"
   status = 200
   force = true
   conditions = {User-Agent = ["*bot*", "*crawler*", "*spider*", "*preview*", "*Chrome-Lighthouse*", "*DareBoost*", "*Google-PageSpeed*"]}
@@ -27,6 +27,17 @@
   status = 200
   force = true
   conditions = {User-Agent = ["*bot*", "*crawler*", "*spider*", "*preview*", "*Chrome-Lighthouse*", "*DareBoost*", "*Google-PageSpeed*"]}
+
+# Handle dictionary routes for users
+[[redirects]]
+  from = "/slownik-erp/:term"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/slownik-erp"
+  to = "/index.html"
+  status = 200
 
 # Handle all other routes with SPA
 [[redirects]]
