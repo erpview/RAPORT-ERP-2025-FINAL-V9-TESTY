@@ -19,6 +19,7 @@
   from = "/slownik-erp/*"
   to = "/seo/slownik-erp/:splat/index.html"
   status = 200
+  force = true
   conditions = {Bot = true}
 
 # Dictionary term pages (for users)
@@ -26,7 +27,7 @@
   from = "/slownik-erp/*"
   to = "/index.html"
   status = 200
-  conditions = {Bot = false}
+  force = true
 
 # Dictionary index page
 [[redirects]]
