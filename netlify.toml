@@ -21,12 +21,6 @@
   status = 200
   force = true
 
-[[redirects]]
-  from = "/slownik-erp/*"
-  to = "/seo/slownik-erp/:splat/index.html"
-  status = 200
-  force = true
-
 # Companies index page redirect for SEO
 [[redirects]]
   from = "/firmy-it"
