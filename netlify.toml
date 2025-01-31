@@ -17,7 +17,7 @@
 # Dictionary term SEO pages (for bots)
 [[redirects]]
   from = "/slownik-erp/*"
-  to = "/seo/slownik-erp/:splat/index.html"
+  to = "/seo/slownik-erp/:splat"
   status = 200
   force = true
   conditions = {Bot = true}
