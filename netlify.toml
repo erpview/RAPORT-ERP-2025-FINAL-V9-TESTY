@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build && cp -r public/seo dist/"
+  command = "npm run build"
   publish = "dist"
 
 [build.environment]
@@ -17,53 +17,18 @@
 # Dictionary term SEO pages (for bots)
 [[redirects]]
   from = "/slownik-erp/*"
-  to = "/seo/slownik-erp/:splat"
+  to = "/index.html"
   status = 200
   force = true
-  conditions = {Bot = true}
+  conditions = {Bot = false}
 
 # Dictionary term pages (for users)
 [[redirects]]
   from = "/slownik-erp/*"
-  to = "/index.html"
+  to = "/seo/slownik-erp/:splat/index.html"
   status = 200
   force = true
-
-# Dictionary index page
-[[redirects]]
-  from = "/slownik-erp"
-  to = "/index.html"
-  status = 200
-
-# Companies index page
-[[redirects]]
-  from = "/firmy-it"
-  to = "/index.html"
-  status = 200
-
-# Partners page
-[[redirects]]
-  from = "/partnerzy"
-  to = "/index.html"
-  status = 200
-
-# Systems page
-[[redirects]]
-  from = "/systemy-erp"
-  to = "/index.html"
-  status = 200
-
-# Calculator page
-[[redirects]]
-  from = "/kalkulator"
-  to = "/index.html"
-  status = 200
-
-# Compare page
-[[redirects]]
-  from = "/porownaj-systemy-erp"
-  to = "/index.html"
-  status = 200
+  conditions = {Bot = true}
 
 # Default SPA fallback
 [[redirects]]
