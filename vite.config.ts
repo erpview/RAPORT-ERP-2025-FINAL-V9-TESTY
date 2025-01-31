@@ -49,8 +49,6 @@ export default defineConfig(async (): Promise<UserConfig> => {
       outDir: 'dist',
       assetsDir: 'assets',
       emptyOutDir: true,
-      manifest: true,
-      cssCodeSplit: false,
       rollupOptions: {
         input: {
           main: resolve(__dirname, 'index.html'),
@@ -107,7 +105,7 @@ export default defineConfig(async (): Promise<UserConfig> => {
     },
     resolve: {
       alias: {
-        '@': resolve(__dirname, './src'),
+        '@': resolve(__dirname, './src')
       }
     },
     optimizeDeps: {

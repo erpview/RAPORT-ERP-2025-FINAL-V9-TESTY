@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build && cp -r public/seo dist/"
+  command = "npm run build && rm -rf dist/slownik-erp && cp -r public/seo dist/"
   publish = "dist"
 
 [build.environment]
@@ -16,10 +16,9 @@
 
 # SEO pages for search engines
 [[redirects]]
-  from = "/slownik-erp/*"
-  to = "/seo/slownik-erp/:splat/index.html"
+  from = "/.well-known/seo/*"
+  to = "/seo/:splat"
   status = 200
-  conditions = {Cookie = ["__prerender_bypass"]}
 
 # Dictionary pages for users
 [[redirects]]
@@ -28,12 +27,6 @@
   status = 200
 
 # Dictionary index page
-[[redirects]]
-  from = "/slownik-erp"
-  to = "/seo/slownik-erp/index.html"
-  status = 200
-  conditions = {Cookie = ["__prerender_bypass"]}
-
 [[redirects]]
   from = "/slownik-erp"
   to = "/index.html"
