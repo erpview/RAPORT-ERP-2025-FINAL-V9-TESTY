@@ -56,6 +56,15 @@ const SlownikErpTerm: React.FC = () => {
   if (!term) {
     return (
       <div className="container mx-auto px-8 sm:px-8 lg:px-12 py-8">
+        <SEOHead 
+          pageIdentifier="dictionary-term"
+          dynamicData={{
+            term: "Nie znaleziono definicji",
+            definition: "Strona nie została znaleziona",
+            slug: slug || "",
+            letter: ""
+          }}
+        />
         <h4 className="text-2xl text-center mb-4">
           Nie znaleziono definicji
         </h4>
@@ -70,6 +79,7 @@ const SlownikErpTerm: React.FC = () => {
   }
 
   const plainTextDescription = stripHtmlAndTruncate(term.explanation);
+  const canonicalUrl = `https://www.raport-erp.pl/slownik-erp/${slug}`;
 
   return (
     <div className="min-h-screen bg-white">
@@ -79,7 +89,23 @@ const SlownikErpTerm: React.FC = () => {
           term: term.term,
           definition: plainTextDescription,
           slug: slug,
-          letter: term.letter
+          letter: term.letter,
+          canonicalUrl,
+          meta_title: `${term.term} - Definicja w Słowniku ERP | ERP-VIEW.PL`,
+          meta_description: plainTextDescription,
+          meta_keywords: `${term.term}, definicja ${term.term}, ${term.term} erp, znaczenie ${term.term}, system erp ${term.term}`,
+          structuredData: {
+            "@context": "https://schema.org",
+            "@type": "DefinedTerm",
+            "name": term.term,
+            "description": plainTextDescription,
+            "inDefinedTermSet": {
+              "@type": "DefinedTermSet",
+              "name": "Słownik ERP",
+              "url": "https://www.raport-erp.pl/slownik-erp"
+            },
+            "url": canonicalUrl
+          }
         }}
       />
       <div className="container mx-auto px-8 sm:px-8 lg:px-12 py-8">

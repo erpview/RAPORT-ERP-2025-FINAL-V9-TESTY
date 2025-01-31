@@ -268,7 +268,7 @@ export const seoService = {
   },
 
   processTemplate(template: string, data: Record<string, any>): string {
-    if (!template || !data) return template;
+    if (!template) return '';
     return template.replace(/\{(\w+)\}/g, (match, key) => {
       return data[key] !== undefined ? data[key] : match;
     });
@@ -350,13 +350,13 @@ export const seoService = {
           JSON.stringify(this.processStructuredData(template.structured_data_template, dynamicData || {}))
           : undefined,
         canonicalUrl: template.canonical_url_template ?
-          this.processTemplate(template.canonical_url_template || '', dynamicData || {})
+          this.processTemplate(String(template.canonical_url_template), dynamicData || {})
           : undefined,
         ogTitle: template.og_title_template ?
-          this.processTemplate(template.og_title_template || '', dynamicData || {})
+          this.processTemplate(String(template.og_title_template), dynamicData || {})
           : undefined,
         ogDescription: template.og_description_template ?
-          this.processTemplate(template.og_description_template || '', dynamicData || {})
+          this.processTemplate(String(template.og_description_template), dynamicData || {})
           : undefined,
         robots: template.robots
       };

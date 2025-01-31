@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build && rm -rf dist/slownik-erp && cp -r public/seo dist/"
+  command = "npm run build && cp -r public/seo dist/"
   publish = "dist"
 
 [build.environment]
@@ -14,17 +14,19 @@
   path = "/*"
   function = "bot-detection"
 
-# SEO pages for search engines
+# Dictionary term SEO pages (for bots)
 [[redirects]]
-  from = "/.well-known/seo/*"
-  to = "/seo/:splat"
+  from = "/slownik-erp/*"
+  to = "/seo/slownik-erp/:splat/index.html"
   status = 200
+  conditions = {Bot = true}
 
-# Dictionary pages for users
+# Dictionary term pages (for users)
 [[redirects]]
   from = "/slownik-erp/*"
   to = "/index.html"
   status = 200
+  conditions = {Bot = false}
 
 # Dictionary index page
 [[redirects]]
@@ -35,22 +37,10 @@
 # Companies index page
 [[redirects]]
   from = "/firmy-it"
-  to = "/seo/firmy-it/index.html"
-  status = 200
-  conditions = {Cookie = ["__prerender_bypass"]}
-
-[[redirects]]
-  from = "/firmy-it"
   to = "/index.html"
   status = 200
 
 # Partners page
-[[redirects]]
-  from = "/partnerzy"
-  to = "/seo/partnerzy/index.html"
-  status = 200
-  conditions = {Cookie = ["__prerender_bypass"]}
-
 [[redirects]]
   from = "/partnerzy"
   to = "/index.html"
@@ -59,22 +49,10 @@
 # Systems page
 [[redirects]]
   from = "/systemy-erp"
-  to = "/seo/systemy-erp/index.html"
-  status = 200
-  conditions = {Cookie = ["__prerender_bypass"]}
-
-[[redirects]]
-  from = "/systemy-erp"
   to = "/index.html"
   status = 200
 
 # Calculator page
-[[redirects]]
-  from = "/kalkulator"
-  to = "/seo/kalkulator/index.html"
-  status = 200
-  conditions = {Cookie = ["__prerender_bypass"]}
-
 [[redirects]]
   from = "/kalkulator"
   to = "/index.html"
@@ -83,16 +61,10 @@
 # Compare page
 [[redirects]]
   from = "/porownaj-systemy-erp"
-  to = "/seo/porownaj-systemy-erp/index.html"
-  status = 200
-  conditions = {Cookie = ["__prerender_bypass"]}
-
-[[redirects]]
-  from = "/porownaj-systemy-erp"
   to = "/index.html"
   status = 200
 
-# Fallback redirect for SPA
+# Default SPA fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"
