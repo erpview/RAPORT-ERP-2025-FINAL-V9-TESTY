@@ -2,6 +2,117 @@
 
 This guide explains how to implement Netlify Edge Functions for SEO optimization of dictionary term pages.
 
+## Project Structure Reference
+Here's how the project should be structured for the edge function to work properly:
+
+```
+project/
+├── netlify/
+│   └── edge-functions/
+│       └── dictionary-term.ts      # Edge function for SEO
+├── public/
+│   └── manifest.webmanifest       # PWA manifest
+├── src/
+│   ├── components/
+│   │   └── seo/
+│   │       └── SEOHead.tsx        # SEO component for meta tags
+│   ├── pages/
+│   │   └── SlownikErpTerm.tsx    # Dictionary term page component
+│   ├── services/
+│   │   └── seo.ts                # SEO service functions
+│   ├── App.tsx                   # Main app component with routes
+│   └── main.tsx                  # Entry point
+├── netlify.toml                  # Netlify configuration
+├── package.json                  # Project dependencies
+└── vite.config.ts               # Vite configuration
+```
+
+### Key Files and Their Purposes
+
+1. **Edge Function Files**:
+   - `netlify/edge-functions/dictionary-term.ts`: Handles SEO-optimized HTML generation for dictionary terms
+   - `netlify.toml`: Configures edge function routing and build settings
+
+2. **React Components**:
+   - `src/pages/SlownikErpTerm.tsx`: Main component for dictionary term pages
+   - `src/components/seo/SEOHead.tsx`: Handles dynamic meta tags for SEO
+
+3. **Configuration Files**:
+   - `vite.config.ts`: Configures build process and asset handling
+   - `package.json`: Defines project dependencies and scripts
+
+4. **Service Files**:
+   - `src/services/seo.ts`: Contains SEO-related utility functions
+
+### Required Routes
+Your application should have these routes configured:
+
+```typescript
+// In App.tsx or your router configuration
+const routes = [
+  {
+    path: '/slownik-erp/:term',
+    component: SlownikErpTerm
+  },
+  // ... other routes
+];
+```
+
+### SEO Component Structure
+Your SEO component should handle these meta tags:
+
+```typescript
+// In SEOHead.tsx
+interface SEOProps {
+  title: string;
+  description: string;
+  keywords?: string;
+  ogType?: string;
+  // ... other props
+}
+```
+
+### Build Output Structure
+After building, your `dist` directory should look like:
+
+```
+dist/
+├── assets/
+│   ├── js/
+│   │   ├── vendor-[hash].js
+│   │   └── main-[hash].js
+│   └── css/
+│       └── main-[hash].css
+└── index.html
+```
+
+## Prerequisites
+Before implementing the edge function, verify that your project has:
+
+1. **Required Routes and Components**:
+   - Check that you have a dictionary term route (e.g., `/slownik-erp/:term`)
+   - Verify your React component for displaying dictionary terms exists (e.g., `SlownikErpTerm.tsx`)
+
+2. **Build Configuration**:
+   - Verify your `vite.config.ts` is set up for SPA and handles asset paths correctly
+   - Check that your build command in `package.json` is correct (should be `npm run build` or similar)
+
+3. **Asset Files**:
+   - Note the names of your built JavaScript and CSS files in the `dist/assets` directory after building
+   - You'll need these names to update the edge function's HTML template
+
+4. **SEO Components**:
+   - Check if you have existing SEO components (like `SEOHead.tsx`)
+   - Make sure your dictionary term pages are already set up to handle meta tags
+
+5. **Required Dependencies**:
+   - Verify your project has all necessary dependencies installed
+   - Check that Node.js version matches (v18 recommended)
+
+6. **Netlify Setup**:
+   - Ensure your project is properly connected to Netlify
+   - Verify you have the necessary Netlify build settings configured
+
 ## Step 1: Create Edge Functions Directory
 ```bash
 mkdir -p netlify/edge-functions
@@ -31,6 +142,12 @@ export default async function handler(request: Request, context: Context) {
     return;
   }
 
+  // Format the term name for display
+  const termName = slug
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+
   const html = `<!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -57,14 +174,14 @@ export default async function handler(request: Request, context: Context) {
   <meta name="HandheldFriendly" content="true">
   
   <!-- SEO Meta Tags -->
-  <title>Słownik ERP - ${slug} | ERP-VIEW.PL</title>
-  <meta name="description" content="Poznaj definicję terminu ${slug} w kontekście systemów ERP. Dowiedz się więcej na ERP-VIEW.PL">
-  <meta name="keywords" content="${slug}, definicja ${slug}, ${slug} erp, znaczenie ${slug}, system erp ${slug}">
+  <title>Słownik ERP - ${termName} | ERP-VIEW.PL</title>
+  <meta name="description" content="Poznaj definicję terminu ${termName} w kontekście systemów ERP. Dowiedz się więcej na ERP-VIEW.PL">
+  <meta name="keywords" content="${termName}, definicja ${termName}, ${termName} erp, znaczenie ${termName}, system erp ${termName}">
   <meta name="robots" content="index, follow">
   
   <!-- OpenGraph Tags -->
-  <meta property="og:title" content="Słownik ERP - ${slug} | ERP-VIEW.PL">
-  <meta property="og:description" content="Poznaj definicję terminu ${slug} w kontekście systemów ERP. Dowiedz się więcej na ERP-VIEW.PL">
+  <meta property="og:title" content="Słownik ERP - ${termName} | ERP-VIEW.PL">
+  <meta property="og:description" content="Poznaj definicję terminu ${termName} w kontekście systemów ERP. Dowiedz się więcej na ERP-VIEW.PL">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://www.raport-erp.pl/slownik-erp/${slug}">
   
@@ -73,8 +190,8 @@ export default async function handler(request: Request, context: Context) {
   {
     "@context": "https://schema.org",
     "@type": "DefinedTerm",
-    "name": "${slug}",
-    "description": "Definicja terminu ${slug} w kontekście systemów ERP",
+    "name": "${termName}",
+    "description": "Definicja terminu ${termName} w kontekście systemów ERP",
     "inDefinedTermSet": {
       "@type": "DefinedTermSet",
       "name": "Słownik ERP",
@@ -163,7 +280,7 @@ git push origin main
 2. View the page source (right-click -> View Page Source)
 3. Verify that:
    - The HTML contains all SEO meta tags
-   - The term slug is correctly inserted in titles and meta tags
+   - The term name is properly formatted (capitalized and spaces instead of dashes)
    - The page loads and functions correctly
    - The React app loads and renders properly
 
@@ -177,3 +294,4 @@ git push origin main
 - The edge function will only run on Netlify's infrastructure
 - Local development might behave differently from production
 - Monitor Netlify's function logs for any errors after deployment
+- The term name formatting will convert dashes to spaces and capitalize each word (e.g., "adresy-skladowania" becomes "Adresy Skladowania")
