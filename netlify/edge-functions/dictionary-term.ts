@@ -18,7 +18,12 @@ export default async function handler(request: Request, context: Context) {
     return;
   }
 
-  // Create a basic HTML template with SEO metadata
+  // Format the term name for display
+  const termName = slug
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+
   const html = `<!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -45,14 +50,14 @@ export default async function handler(request: Request, context: Context) {
   <meta name="HandheldFriendly" content="true">
   
   <!-- SEO Meta Tags -->
-  <title>Słownik ERP - ${slug} | ERP-VIEW.PL</title>
-  <meta name="description" content="Poznaj definicję terminu ${slug} w kontekście systemów ERP. Dowiedz się więcej na ERP-VIEW.PL">
-  <meta name="keywords" content="${slug}, definicja ${slug}, ${slug} erp, znaczenie ${slug}, system erp ${slug}">
+  <title>Słownik ERP - ${termName} | ERP-VIEW.PL</title>
+  <meta name="description" content="Poznaj definicję terminu ${termName} w kontekście systemów ERP. Dowiedz się więcej na ERP-VIEW.PL">
+  <meta name="keywords" content="${termName}, definicja ${termName}, ${termName} erp, znaczenie ${termName}, system erp ${termName}">
   <meta name="robots" content="index, follow">
   
   <!-- OpenGraph Tags -->
-  <meta property="og:title" content="Słownik ERP - ${slug} | ERP-VIEW.PL">
-  <meta property="og:description" content="Poznaj definicję terminu ${slug} w kontekście systemów ERP. Dowiedz się więcej na ERP-VIEW.PL">
+  <meta property="og:title" content="Słownik ERP - ${termName} | ERP-VIEW.PL">
+  <meta property="og:description" content="Poznaj definicję terminu ${termName} w kontekście systemów ERP. Dowiedz się więcej na ERP-VIEW.PL">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://www.raport-erp.pl/slownik-erp/${slug}">
   
@@ -61,8 +66,8 @@ export default async function handler(request: Request, context: Context) {
   {
     "@context": "https://schema.org",
     "@type": "DefinedTerm",
-    "name": "${slug}",
-    "description": "Definicja terminu ${slug} w kontekście systemów ERP",
+    "name": "${termName}",
+    "description": "Definicja terminu ${termName} w kontekście systemów ERP",
     "inDefinedTermSet": {
       "@type": "DefinedTermSet",
       "name": "Słownik ERP",
