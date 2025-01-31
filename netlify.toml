@@ -14,18 +14,13 @@
   path = "/*"
   function = "bot-detection"
 
-# SEO pages for search engines
-[[redirects]]
-  from = "/.well-known/seo/*"
-  to = "/seo/:splat"
-  status = 200
-
 # Legacy dictionary term redirects
 [[redirects]]
   from = "/slownik-erp/319-gospodarka-remontowa.html"
   to = "/slownik-erp/gospodarka-remontowa"
   status = 301
   force = true
+  query = {path = ":path"}
 
 [[redirects]]
   from = "/slownik-erp/:id-:slug.html"
@@ -33,7 +28,7 @@
   status = 301
   force = true
 
-# Dictionary pages for users
+# Dictionary pages
 [[redirects]]
   from = "/slownik-erp/*"
   to = "/index.html"
@@ -43,6 +38,12 @@
 [[redirects]]
   from = "/slownik-erp"
   to = "/index.html"
+  status = 200
+
+# SEO pages
+[[redirects]]
+  from = "/.well-known/seo/*"
+  to = "/seo/:splat"
   status = 200
 
 # Companies index page
