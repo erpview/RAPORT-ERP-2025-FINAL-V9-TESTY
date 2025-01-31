@@ -14,12 +14,18 @@
   path = "/*"
   function = "bot-detection"
 
-# Dictionary pages redirect for SEO
+# Dictionary pages redirect for SEO - only for index
 [[redirects]]
   from = "/slownik-erp"
   to = "/seo/slownik-erp/index.html"
   status = 200
   force = true
+
+# Dictionary term pages should be handled by SPA
+[[redirects]]
+  from = "/slownik-erp/*"
+  to = "/index.html"
+  status = 200
 
 # Companies index page redirect for SEO
 [[redirects]]
