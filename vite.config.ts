@@ -84,12 +84,12 @@ export default defineConfig(async (): Promise<UserConfig> => {
         output: {
           assetFileNames: (assetInfo) => {
             if (!assetInfo.name) return 'assets/[name]-[hash][extname]';
-            const extType = assetInfo.name.split('.')[1];
-            if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
-              return `assets/images/[name]-[hash][extname]`;
-            }
-            if (/css/i.test(extType)) {
-              return `assets/css/[name]-[hash][extname]`;
+            const info = assetInfo.name.split('.');
+            const ext = info[info.length - 1];
+            if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(ext)) {
+              return `assets/img/[name]-[hash][extname]`;
+            } else if (/woff|woff2/.test(ext)) {
+              return `assets/fonts/[name]-[hash][extname]`;
             }
             return `assets/[name]-[hash][extname]`;
           },
@@ -103,6 +103,11 @@ export default defineConfig(async (): Promise<UserConfig> => {
       },
       modulePreload: {
         polyfill: false
+      }
+    },
+    resolve: {
+      alias: {
+        '@': resolve(__dirname, './src'),
       }
     },
     optimizeDeps: {

@@ -14,18 +14,36 @@
   path = "/*"
   function = "bot-detection"
 
-# Dictionary pages redirect for SEO - only for index
+# Handle bot requests for dictionary terms
+[[redirects]]
+  from = "/slownik-erp/*"
+  to = "/seo/slownik-erp/:splat/index.html"
+  status = 200
+  force = true
+  conditions = {Bot = true}
+
+# Handle human requests for dictionary terms
+[[redirects]]
+  from = "/slownik-erp/*"
+  to = "/index.html"
+  status = 200
+  force = true
+  conditions = {Bot = false}
+
+# Dictionary index page redirect for SEO
 [[redirects]]
   from = "/slownik-erp"
   to = "/seo/slownik-erp/index.html"
   status = 200
   force = true
+  conditions = {Bot = true}
 
-# Dictionary term pages should be handled by SPA
 [[redirects]]
-  from = "/slownik-erp/*"
+  from = "/slownik-erp"
   to = "/index.html"
   status = 200
+  force = true
+  conditions = {Bot = false}
 
 # Companies index page redirect for SEO
 [[redirects]]
@@ -33,6 +51,14 @@
   to = "/seo/firmy-it/index.html"
   status = 200
   force = true
+  conditions = {Bot = true}
+
+[[redirects]]
+  from = "/firmy-it"
+  to = "/index.html"
+  status = 200
+  force = true
+  conditions = {Bot = false}
 
 # Partners page redirect for SEO
 [[redirects]]
@@ -40,29 +66,58 @@
   to = "/seo/partnerzy/index.html"
   status = 200
   force = true
+  conditions = {Bot = true}
+
+[[redirects]]
+  from = "/partnerzy"
+  to = "/index.html"
+  status = 200
+  force = true
+  conditions = {Bot = false}
 
 # Systems page redirect for SEO
 [[redirects]]
   from = "/systemy-erp"
   to = "/seo/systemy-erp/index.html"
   status = 200
-  conditions = {Cookie = ["__prerender_bypass"]}
+  conditions = {Cookie = ["__prerender_bypass"], Bot = true}
+
+[[redirects]]
+  from = "/systemy-erp"
+  to = "/index.html"
+  status = 200
+  force = true
+  conditions = {Bot = false}
 
 # Calculator page redirect for SEO
 [[redirects]]
   from = "/kalkulator"
   to = "/seo/kalkulator/index.html"
   status = 200
-  conditions = {Cookie = ["__prerender_bypass"]}
+  conditions = {Cookie = ["__prerender_bypass"], Bot = true}
+
+[[redirects]]
+  from = "/kalkulator"
+  to = "/index.html"
+  status = 200
+  force = true
+  conditions = {Bot = false}
 
 # Compare page redirect for SEO
 [[redirects]]
   from = "/porownaj-systemy-erp"
   to = "/seo/porownaj-systemy-erp/index.html"
   status = 200
-  conditions = {Cookie = ["__prerender_bypass"]}
+  conditions = {Cookie = ["__prerender_bypass"], Bot = true}
 
-# Fallback redirect
+[[redirects]]
+  from = "/porownaj-systemy-erp"
+  to = "/index.html"
+  status = 200
+  force = true
+  conditions = {Bot = false}
+
+# Fallback redirect - ensure SPA routing works
 [[redirects]]
   from = "/*"
   to = "/index.html"
