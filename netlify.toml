@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build && rm -rf dist/slownik-erp && cp -r public/seo dist/"
+  command = "npm run build && cp -r public/seo dist/"
   publish = "dist"
 
 [build.environment]
@@ -11,19 +11,13 @@
     X-Robots-Tag = "all"
 
 [[edge_functions]]
-  path = "/*"
-  function = "bot-detection"
+  path = "/slownik-erp/*"
+  function = "dictionary-term"
 
-# SEO pages for search engines
-[[redirects]]
-  from = "/.well-known/seo/*"
-  to = "/seo/:splat"
-  status = 200
-
-# Dictionary pages for users
+# Dictionary term pages
 [[redirects]]
   from = "/slownik-erp/*"
-  to = "/index.html"
+  to = "/dictionary-term.html"
   status = 200
 
 # Dictionary index page
@@ -32,7 +26,7 @@
   to = "/index.html"
   status = 200
 
-# Companies index page
+# Other pages with SEO versions
 [[redirects]]
   from = "/firmy-it"
   to = "/seo/firmy-it/index.html"
@@ -44,7 +38,6 @@
   to = "/index.html"
   status = 200
 
-# Partners page
 [[redirects]]
   from = "/partnerzy"
   to = "/seo/partnerzy/index.html"
@@ -56,7 +49,6 @@
   to = "/index.html"
   status = 200
 
-# Systems page
 [[redirects]]
   from = "/systemy-erp"
   to = "/seo/systemy-erp/index.html"
@@ -68,7 +60,6 @@
   to = "/index.html"
   status = 200
 
-# Calculator page
 [[redirects]]
   from = "/kalkulator"
   to = "/seo/kalkulator/index.html"
@@ -80,7 +71,6 @@
   to = "/index.html"
   status = 200
 
-# Compare page
 [[redirects]]
   from = "/porownaj-systemy-erp"
   to = "/seo/porownaj-systemy-erp/index.html"
