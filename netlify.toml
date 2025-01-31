@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build && cp -r public/seo dist/"
+  command = "npm run build"
   publish = "dist"
 
 [build.environment]
@@ -10,14 +10,15 @@
   [headers.values]
     X-Robots-Tag = "all"
 
+# Dictionary term pages with edge function
 [[edge_functions]]
   path = "/slownik-erp/*"
   function = "dictionary-term"
 
-# Dictionary term pages
+# Dictionary term pages fallback
 [[redirects]]
   from = "/slownik-erp/*"
-  to = "/dictionary-term.html"
+  to = "/index.html"
   status = 200
 
 # Dictionary index page
