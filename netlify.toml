@@ -20,13 +20,7 @@
   to = "/slownik-erp/gospodarka-remontowa"
   status = 301
   force = true
-  query = {path = ":path"}
-
-[[redirects]]
-  from = "/slownik-erp/:id-:slug.html"
-  to = "/slownik-erp/:slug"
-  status = 301
-  force = true
+  headers = {X-From = "Netlify"}
 
 # Dictionary pages
 [[redirects]]
@@ -34,76 +28,10 @@
   to = "/index.html"
   status = 200
 
-# Dictionary index page
-[[redirects]]
-  from = "/slownik-erp"
-  to = "/index.html"
-  status = 200
-
 # SEO pages
 [[redirects]]
   from = "/.well-known/seo/*"
   to = "/seo/:splat"
-  status = 200
-
-# Companies index page
-[[redirects]]
-  from = "/firmy-it"
-  to = "/seo/firmy-it/index.html"
-  status = 200
-  conditions = {Cookie = ["__prerender_bypass"]}
-
-[[redirects]]
-  from = "/firmy-it"
-  to = "/index.html"
-  status = 200
-
-# Partners page
-[[redirects]]
-  from = "/partnerzy"
-  to = "/seo/partnerzy/index.html"
-  status = 200
-  conditions = {Cookie = ["__prerender_bypass"]}
-
-[[redirects]]
-  from = "/partnerzy"
-  to = "/index.html"
-  status = 200
-
-# Systems page
-[[redirects]]
-  from = "/systemy-erp"
-  to = "/seo/systemy-erp/index.html"
-  status = 200
-  conditions = {Cookie = ["__prerender_bypass"]}
-
-[[redirects]]
-  from = "/systemy-erp"
-  to = "/index.html"
-  status = 200
-
-# Calculator page
-[[redirects]]
-  from = "/kalkulator"
-  to = "/seo/kalkulator/index.html"
-  status = 200
-  conditions = {Cookie = ["__prerender_bypass"]}
-
-[[redirects]]
-  from = "/kalkulator"
-  to = "/index.html"
-  status = 200
-
-# Compare page
-[[redirects]]
-  from = "/porownaj-systemy-erp"
-  to = "/seo/porownaj-systemy-erp/index.html"
-  status = 200
-  conditions = {Cookie = ["__prerender_bypass"]}
-
-[[redirects]]
-  from = "/porownaj-systemy-erp"
-  to = "/index.html"
   status = 200
 
 # Fallback redirect for SPA
