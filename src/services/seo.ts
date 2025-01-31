@@ -268,7 +268,7 @@ export const seoService = {
   },
 
   processTemplate(template: string, data: Record<string, any>): string {
-    if (!template) return '';
+    if (!template || !data) return template;
     return template.replace(/\{(\w+)\}/g, (match, key) => {
       return data[key] !== undefined ? data[key] : match;
     });
@@ -285,49 +285,6 @@ export const seoService = {
         return null;
       }
 
-      // Handle dictionary term pages
-      if (pageIdentifier === 'dictionary-term' && dynamicData) {
-        const { term, definition, slug } = dynamicData;
-        
-        // Process title
-        const title = this.processTemplate(
-          template.title_template,
-          { term }
-        );
-
-        // Process description
-        const description = this.processTemplate(
-          template.description_template,
-          { definition }
-        );
-
-        // Process keywords
-        const keywords = this.processTemplate(
-          template.keywords_template,
-          { term }
-        );
-
-        // Process structured data
-        const structuredData = template.structured_data_template 
-          ? JSON.stringify(this.processStructuredData(template.structured_data_template, { term, definition, slug }))
-          : null;
-
-        // Process canonical URL
-        const canonicalUrl = `https://www.raport-erp.pl/slownik-erp/${slug}`;
-
-        return {
-          title,
-          description,
-          keywords,
-          structuredData,
-          canonicalUrl,
-          ogTitle: title,
-          ogDescription: description,
-          robots: template.robots || 'index, follow'
-        };
-      }
-
-      // Handle other pages
       const processed: ProcessedSEOData = {
         title: dynamicData ? 
           this.processTemplate(
@@ -343,50 +300,68 @@ export const seoService = {
             template.description_template, 
             dynamicData
           ) : template.description_template,
-        keywords: template.keywords_template ? 
-          this.processTemplate(template.keywords_template, dynamicData || {}) 
-          : undefined,
-        structuredData: template.structured_data_template ? 
-          JSON.stringify(this.processStructuredData(template.structured_data_template, dynamicData || {}))
-          : undefined,
-        canonicalUrl: template.canonical_url_template ?
-          this.processTemplate(String(template.canonical_url_template), dynamicData || {})
-          : undefined,
-        ogTitle: template.og_title_template ?
-          this.processTemplate(String(template.og_title_template), dynamicData || {})
-          : undefined,
-        ogDescription: template.og_description_template ?
-          this.processTemplate(String(template.og_description_template), dynamicData || {})
-          : undefined,
-        robots: template.robots
       };
+
+      if (template.keywords_template || template.keywords_fallback_template) {
+        processed.keywords = dynamicData ? 
+          this.processTemplate(
+            dynamicData.meta_keywords || 
+            template.keywords_fallback_template || 
+            template.keywords_template || '',
+            dynamicData
+          ) : (template.keywords_template || '');
+      }
+
+      if (template.canonical_url_template) {
+        processed.canonicalUrl = dynamicData
+          ? this.processTemplate(template.canonical_url_template, dynamicData)
+          : template.canonical_url_template;
+      }
+
+      if (template.og_title_template) {
+        processed.ogTitle = dynamicData
+          ? this.processTemplate(template.og_title_template, dynamicData)
+          : template.og_title_template;
+      }
+
+      if (template.og_description_template) {
+        processed.ogDescription = dynamicData
+          ? this.processTemplate(template.og_description_template, dynamicData)
+          : template.og_description_template;
+      }
+
+      if (template.og_image_field && dynamicData?.[template.og_image_field]) {
+        processed.ogImage = dynamicData[template.og_image_field];
+      }
+
+      if (template.structured_data_template) {
+        try {
+          const structuredData = typeof template.structured_data_template === 'string'
+            ? JSON.parse(template.structured_data_template)
+            : template.structured_data_template;
+
+          if (dynamicData) {
+            const processedJson = this.processTemplate(
+              JSON.stringify(structuredData),
+              dynamicData
+            );
+            processed.structuredData = JSON.parse(processedJson);
+          } else {
+            processed.structuredData = structuredData;
+          }
+        } catch (error) {
+          console.error('Error processing structured data:', error);
+        }
+      }
+
+      if (template.robots) {
+        processed.robots = template.robots;
+      }
 
       return processed;
     } catch (error) {
       console.error('Error processing SEO data:', error);
       return null;
     }
-  },
-
-  processStructuredData(template: any, data: Record<string, any>): any {
-    if (typeof template !== 'object' || template === null) {
-      return template;
-    }
-
-    if (Array.isArray(template)) {
-      return template.map(item => this.processStructuredData(item, data));
-    }
-
-    const result: Record<string, any> = {};
-    for (const [key, value] of Object.entries(template)) {
-      if (typeof value === 'string') {
-        result[key] = this.processTemplate(value, data);
-      } else if (typeof value === 'object') {
-        result[key] = this.processStructuredData(value, data);
-      } else {
-        result[key] = value;
-      }
-    }
-    return result;
   }
 };
